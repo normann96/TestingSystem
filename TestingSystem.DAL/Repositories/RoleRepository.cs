@@ -16,7 +16,7 @@ namespace TestingSystem.DAL.Repositories
         public AppRoleManager RoleManager { get; }
         public RoleRepository(AppIdentityDbContext db) : base(db)
         {
-            RoleManager = new AppRoleManager(new RoleStore<AppRole>(db));
+            RoleManager = AppRoleManager.CreateWithConfig(db);
         }
 
         #region IRoleRepository Members

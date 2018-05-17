@@ -16,7 +16,7 @@ namespace TestingSystem.DAL.Repositories
 
         public UserRepository(AppIdentityDbContext db) : base(db)
         {
-            UserManager = new AppUserManager(new UserStore<AppUser>(db));
+            UserManager = AppUserManager.CreateWithConfig(db);
         }
 
         #region IUserRepository Members
