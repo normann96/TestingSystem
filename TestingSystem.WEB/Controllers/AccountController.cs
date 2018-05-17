@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using TestingSystem.BLL.EntitiesDto;
 using TestingSystem.BLL.Interfaces;
 using TestingSystem.WEB.Models.Account;
 
@@ -19,7 +20,7 @@ namespace TestingSystem.WEB.Controllers
 
         public AccountController(IUserService userService)
         {
-            UserService = userService;
+            UserService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
         [AllowAnonymous]
@@ -58,11 +59,60 @@ namespace TestingSystem.WEB.Controllers
             return View(details);
         }
 
+        //
+        // GET: /Account/Register
+        [AllowAnonymous]
+        public ActionResult Register()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Account/Register
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new UserDto() { UserName = model.Name, Email = model.Email };
+
+                var result = await UserService.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    ClaimsIdentity ident = await UserService.CreateIdentityAsync(user,
+                        DefaultAuthenticationTypes.ApplicationCookie);
+
+                    AuthManager.SignIn(new AuthenticationProperties
+                    {
+                        IsPersistent = false
+                    }, ident);
+
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    AddErrorsFromResult(result);
+                }
+            }
+
+            return View(model);
+        }
+
         [Authorize]
         public ActionResult Logout()
         {
             AuthManager.SignOut();
             return RedirectToAction("Index", "Home");
+        }
+
+        private void AddErrorsFromResult(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error);
+            }
         }
 
         private ActionResult RedirectToLocal(string returnUrl)

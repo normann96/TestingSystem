@@ -11,7 +11,7 @@
         <div class="form-signin">
             <h3 class="form-signin-heading">Please Sign In</h3>
             <hr />
-            @Html.ValidationSummary("", new { @class = "text-danger" })
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.returnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
@@ -21,9 +21,11 @@
 
                 <div class="form-group">
                     @Html.TextBoxFor(x => x.Name, new { @class = "form-control", placeholder = "Enter login" })
+                    @Html.ValidationMessageFor(x => x.Name, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
                     @Html.PasswordFor(x => x.Password, new { @class = "form-control", placeholder = "Enter password" })
+                    @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
                 </div>
                 <hr />
                 <div class="form-group">
