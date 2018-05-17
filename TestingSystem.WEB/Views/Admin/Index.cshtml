@@ -1,0 +1,59 @@
+﻿@model IEnumerable<TestingSystem.WEB.Models.Users.UserViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    int count = 0;
+}
+
+<br/>
+<div class="card">
+    <div class="card-header">
+        <h4>All Users</h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped table-bordered">
+            <tr>
+                <th class="text-center">#</th>
+                <th class="text-center">User</th>
+                <th class="text-center">Email</th>
+                <th class="text-center" colspan="3">Roles</th>
+                <th class="text-center" >Actions</th>
+            </tr>
+            
+            @foreach (var user in Model)
+            {
+                count++;
+                <tr>
+                    <td class="text-center align-middle">@count</td>
+                    <td class="text-center align-middle">
+                        @Html.DisplayFor(modelItem => user.UserName)
+                    </td>
+                    <td class="align-middle">
+                        @Html.DisplayFor(modelItem => user.Email)
+                    </td>
+
+                    <td colspan="3">
+                        @foreach (var role in user.Roles)
+                        {
+                            <ul>
+                                <li>@Html.DisplayFor(m => role)</li>
+                            </ul>
+                        }
+                    </td>
+                    <td class="text-center align-middle">
+                        @using (Html.BeginForm("DeleteUser", "Admin", new { id = user.Id }, FormMethod.Post))
+                        {
+                            @*@Html.ActionLink("Изменить", "EditUser", new { id = user.Id },
+                                new { @class = "btn btn-primary btn-xs", style = "float: left; margin-right: 10px" })*@
+                            <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                        }
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+    <div class="card-footer">
+        @Html.ActionLink("Add User", "CreateUser", "Admin", null, new { @class = "btn btn-primary", role = "button" })
+    </div>
+</div>
