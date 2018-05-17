@@ -25,6 +25,7 @@ namespace TestingSystem.WEB
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/signin.css",
                       "~/Content/site.css"));
         }
     }
