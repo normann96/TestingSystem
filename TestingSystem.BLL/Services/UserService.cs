@@ -140,6 +140,28 @@ namespace TestingSystem.BLL.Services
             return await Database.UserRepository.RemoveFromRoleAsync(userId, role);
         }
 
+        public IQueryable<UserDto> Users
+        {
+            get
+            {
+                var appUsers = Database.UserRepository.GetAll().AsQueryable();
+
+                var userDtos = new List<UserDto>();
+                foreach (var appUser in appUsers)
+                {
+                    var user = new UserDto
+                    {
+                        Id = appUser.Id,
+                        Email = appUser.Email,
+                        UserName = appUser.UserName,
+                        RolesId = appUser.Roles.Select(x => x.RoleId).ToList()
+                    };
+                    userDtos.Add(user);
+                }
+                return userDtos.AsQueryable();
+            }
+        }
+
         #endregion
 
         public void Dispose()

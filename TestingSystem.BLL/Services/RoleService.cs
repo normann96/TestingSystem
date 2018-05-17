@@ -44,6 +44,18 @@ namespace TestingSystem.BLL.Services
             return await Database.RoleRepository.DeleteAsync(role);
         }
 
+
+        public async Task<List<RoleDto>> GetAllAsync()
+        {
+            var roles = await Database.RoleRepository.GetAllAsync();
+            return roles.Select(role => new RoleDto
+                {
+                    Id = role.Id,
+                    Name = role.Name,
+                })
+                .ToList();
+        }
+
         public IQueryable<RoleDto> Roles
         {
             get

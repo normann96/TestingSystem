@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -19,5 +20,6 @@ namespace TestingSystem.BLL.Interfaces
         Task<IdentityResult> AddToRoleAsync(string userId, string role);
         Task<IdentityResult> RemoveFromRoleAsync(string userId, string role);
         Task<List<UserDto>> GetAllAsync();
+        IQueryable<UserDto> Users { get; }
     }
 }
