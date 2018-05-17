@@ -17,8 +17,8 @@ namespace TestingSystem.DAL.Interfaces.IRepository
         List<T> GetAll(Expression<Func<T, bool>> whereCondition);
         Task<List<T>> GetAllAsync(Expression<Func<T, bool>> whereCondition);
         IQueryable<T> GetQueryable();
-        void Create(T item);
+        T Create(T item);
         void Update(T item);
-        void Delete(T item);
+        T Delete(T item);
     }
 }

@@ -67,9 +67,9 @@ namespace TestingSystem.DAL.Repositories.Base
             return Set.AsQueryable();
         }
 
-        public void Create(T item)
+        public T Create(T item)
         {
-            Set.Add(item);
+            return Set.Add(item);
         }
 
         public void Update(T item)
@@ -77,9 +77,9 @@ namespace TestingSystem.DAL.Repositories.Base
             Set.AddOrUpdate(item);
         }
 
-        public void Delete(T item)
+        public T Delete(T item)
         {
-            Set.Remove(item);
+            return Set.Remove(item);
         }
         #endregion
 
