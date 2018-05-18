@@ -13,6 +13,7 @@ using TestingSystem.WEB.Models.Account;
 
 namespace TestingSystem.WEB.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         private IUserService UserService { get; }

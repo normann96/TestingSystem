@@ -7,10 +7,12 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using TestingSystem.BLL.Interfaces;
+using TestingSystem.Constants;
 using TestingSystem.WEB.Models.Roles;
 
 namespace TestingSystem.WEB.Controllers
 {
+    [Authorize(Roles = RoleName.Admin)]
     public class RoleAdminController : Controller
     {
         private IUserService UserService { get; }
