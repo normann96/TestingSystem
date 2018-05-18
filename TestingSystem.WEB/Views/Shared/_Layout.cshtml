@@ -30,6 +30,7 @@
                     <li style="padding-left: 10px;">@Html.ActionLink("Home", "Index", "Home", null, new { @class = "btn btn-outline-info", role = "button" })</li>
                     <li style="padding-left: 10px;">@Html.ActionLink("About", "About", "Home", null, new { @class = "btn btn-outline-info", role = "button" })</li>
                     <li style="padding-left: 10px;">@Html.ActionLink("Contact", "Contact", "Home", null, new { @class = "btn btn-outline-info", role = "button" })</li>
+                    <li style="padding-left: 10px;">@Html.ActionLink("Tests", "Index", "Test", null, new { @class = "btn btn-outline-info", role = "button" })</li>
 
                     @if (User.IsInRole(RoleName.Admin))
                     {
@@ -55,7 +56,7 @@
         <br />
         @RenderBody()
 
-        <footer class="fixed-bottom text-center p-2">
+        <footer class=" text-center p-2">
             <hr />
             <h5>&copy; @DateTime.Now.Year - Knowledge testing system</h5>
         </footer>
