@@ -27,9 +27,11 @@ namespace TestingSystem.BLL.Infrastructure
             Bind<IUserService>().To<UserService>();
             Bind<IRoleService>().To<RoleService>();
 
+            Bind<ITestService>().To<TestService>();
+            Bind<IQuestionService>().To<QuestionService>();
+
             Bind<IUserRepository>().To<UserRepository>();
             Bind<IRoleRepository>().To<RoleRepository>();
-
 
             Bind<ITestRepository>().To<TestRepository>();
             Bind<IQuestionRepository>().To<QuestionRepository>();
