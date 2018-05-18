@@ -8,15 +8,17 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using TestingSystem.BLL.EntitiesDto;
 using TestingSystem.BLL.Interfaces;
+using TestingSystem.Constants;
 using TestingSystem.WEB.Models.Users;
 
 namespace TestingSystem.WEB.Controllers
 {
+    [Authorize(Roles = RoleName.Admin)]
+
     public class AdminController : Controller
     {
         private IUserService UserService { get; }
         private IRoleService RoleService { get; }
-        private IAuthenticationManager AuthManager => HttpContext.GetOwinContext().Authentication;
 
         public AdminController(IUserService userService, IRoleService roleService)
         {
@@ -34,8 +36,7 @@ namespace TestingSystem.WEB.Controllers
                 UserName = userDto.UserName,
                 Email = userDto.Email,
                 Roles = rolesDto.Join(userDto.RolesId, role => role.Id, id => id, (role, id) => role.Name)
-            })
-                .ToList();
+            }).ToList();
 
             return View(users);
         }
