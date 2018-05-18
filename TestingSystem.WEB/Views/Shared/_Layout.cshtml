@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using TestingSystem.Constants
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -11,7 +12,12 @@
 <body>
     <div class="container">
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            
+            <!-- Brand/logo -->
+            <a class="navbar-brand" href="#">
+                <img src="~/Content/Images/knowledge.png" alt="logo" style="width:40px;">
+            </a>
+            @*@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -24,8 +30,21 @@
                     <li style="padding-left: 10px;">@Html.ActionLink("Home", "Index", "Home", null, new { @class = "btn btn-outline-info", role = "button" })</li>
                     <li style="padding-left: 10px;">@Html.ActionLink("About", "About", "Home", null, new { @class = "btn btn-outline-info", role = "button" })</li>
                     <li style="padding-left: 10px;">@Html.ActionLink("Contact", "Contact", "Home", null, new { @class = "btn btn-outline-info", role = "button" })</li>
-                </ul>
 
+                    @if (User.IsInRole(RoleName.Admin))
+                    {
+                        <li class="nav-item dropdown" style="padding-left: 10px;">
+                            <a class="nav-link dropdown-toggle btn btn-sm btn-outline-info" href="" id="dropdown10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><strong class="text-danger">Admin management</strong></a>
+                            <div class="dropdown-menu" style="margin-left: 20px">
+                                @Html.ActionLink("Add user", "CreateUser", "Admin", null, new { @class = "dropdown-item text-center" })
+                                @Html.ActionLink("All users", "Index", "Admin", null, new { @class = "dropdown-item text-center" })
+                                @Html.ActionLink("All roles", "Index", "RoleAdmin", null, new { @class = "dropdown-item text-center" })
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">TEST</a>
+                            </div>
+                        </li>
+                    }
+                </ul>
             </div>
 
             @Html.Partial("_LoginPartial")
@@ -41,8 +60,10 @@
             <h5>&copy; @DateTime.Now.Year - Knowledge testing system</h5>
         </footer>
     </div>
-    @Scripts.Render("~/favicon.ico");
+
+    @Scripts.Render("~/favicon.ico")
     @Scripts.Render("~/bundles/jquery")
+    @*@Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")*@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
