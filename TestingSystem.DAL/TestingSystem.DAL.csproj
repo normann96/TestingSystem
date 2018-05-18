@@ -55,14 +55,21 @@
   <ItemGroup>
     <Compile Include="EF\AppIdentityDbContext.cs" />
     <Compile Include="EF\InitializerDb.cs" />
+    <Compile Include="Entities\Answer.cs" />
     <Compile Include="Entities\AppRole.cs" />
     <Compile Include="Entities\AppUser.cs" />
+    <Compile Include="Entities\Question.cs" />
+    <Compile Include="Entities\Test.cs" />
     <Compile Include="Identity\AppRoleManager.cs" />
     <Compile Include="Identity\AppUserManager.cs" />
     <Compile Include="Interfaces\IIdentityUnitOfWork.cs" />
+    <Compile Include="Interfaces\IRepository\IAnswerRepository.cs" />
+    <Compile Include="Interfaces\IRepository\IQuestionRepository.cs" />
     <Compile Include="Interfaces\IRepository\IRepository.cs" />
     <Compile Include="Interfaces\IRepository\IRoleRepository.cs" />
+    <Compile Include="Interfaces\IRepository\ITestRepository.cs" />
     <Compile Include="Interfaces\IRepository\IUserRepository.cs" />
+    <Compile Include="Interfaces\ITestUnitOfWork.cs" />
     <Compile Include="Migrations\201805170640168_InitialCreate.cs" />
     <Compile Include="Migrations\201805170640168_InitialCreate.Designer.cs">
       <DependentUpon>201805170640168_InitialCreate.cs</DependentUpon>
@@ -73,9 +80,13 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AnswerRepository.cs" />
     <Compile Include="Repositories\Base\BaseRepository.cs" />
     <Compile Include="Repositories\IdentityUnitOfWork.cs" />
+    <Compile Include="Repositories\QuestionRepository.cs" />
     <Compile Include="Repositories\RoleRepository.cs" />
+    <Compile Include="Repositories\TestRepository.cs" />
+    <Compile Include="Repositories\TestUnitOfWork.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
