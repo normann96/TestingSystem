@@ -1,0 +1,66 @@
+﻿@model TestingSystem.WEB.Models.Tests.TestViewModel
+
+@{
+    ViewBag.Title = "Details Test";
+    int count = 0;
+}
+
+<br/>
+<div class="card">
+    <div class="card-header">
+        <h4 style="text-align: center; font-weight: bold;">@Model.Name</h4>
+    </div>
+    <div class="card-body">
+
+        <h5 style="font-weight: bold; padding-bottom: 10px">
+            @Model.TestDescription
+        </h5>
+
+
+        @if (Model.Questions.Count > 0)
+        {
+            <table class="table table-sm table-bordered table-dark table-hover">
+                <thead class="bg-primary">
+                    <tr class="text-center">
+                        <th scope="col">#</th>
+                        <th scope="col" width="70%">Question</th>
+                        <th scope="col">Point</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var question in Model.Questions)
+                    {
+                        count++;
+                        <tr>
+                            <td class="text-center">@count</td>
+                            <td width="70%">@Html.DisplayFor(modelItem => question.QuestionContent)</td>
+                            <td class="text-center">@Html.DisplayFor(modelItem => question.Point)</td>
+                            <td class="text-center">
+                                @Html.ActionLink("Edit", "Edit", "Question", new { questionId = question.Id }, new { @class = "btn btn-sm btn-primary" })
+                                @Html.ActionLink("Delete", "Delete", "Question", new { questionId = question.Id, testId = question.TestId }, new { @class = "btn btn-sm btn-danger" })
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p> - There are no questions in the test.</p>
+        }
+
+
+    </div>
+</div>
+
+<div class="card-footer">
+    <div>
+        @Html.ActionLink("Add question", "Create", "Question", new { id = Model.Id }, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Back to tests", "Index", null, new { @class = "btn btn-outline-info" })
+    </div>
+</div>
+
+
