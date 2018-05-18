@@ -195,6 +195,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RoleAdminController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -203,6 +204,9 @@
     <Compile Include="Models\Roles\RoleEditModel.cs" />
     <Compile Include="Models\Roles\RoleEditViewModel.cs" />
     <Compile Include="Models\Roles\RoleViewModel.cs" />
+    <Compile Include="Models\Tests\AnswerViewModel.cs" />
+    <Compile Include="Models\Tests\QuestionViewModel.cs" />
+    <Compile Include="Models\Tests\TestViewModel.cs" />
     <Compile Include="Models\Users\CreateUserViewModel.cs" />
     <Compile Include="Models\Users\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -302,6 +306,9 @@
     <Content Include="Views\RoleAdmin\Index.cshtml" />
     <Content Include="Views\RoleAdmin\EditRole.cshtml" />
     <Content Include="Views\RoleAdmin\_AddRole.cshtml" />
+    <Content Include="Views\Test\CreateTest.cshtml" />
+    <Content Include="Views\Test\Index.cshtml" />
+    <Content Include="Views\Test\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
