@@ -63,13 +63,29 @@
     <Compile Include="Interfaces\IRepository\IRepository.cs" />
     <Compile Include="Interfaces\IRepository\IRoleRepository.cs" />
     <Compile Include="Interfaces\IRepository\IUserRepository.cs" />
+    <Compile Include="Migrations\201805170640168_InitialCreate.cs" />
+    <Compile Include="Migrations\201805170640168_InitialCreate.Designer.cs">
+      <DependentUpon>201805170640168_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805181539078_Initial.cs" />
+    <Compile Include="Migrations\201805181539078_Initial.Designer.cs">
+      <DependentUpon>201805181539078_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Base\BaseRepository.cs" />
     <Compile Include="Repositories\IdentityUnitOfWork.cs" />
     <Compile Include="Repositories\RoleRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201805170640168_InitialCreate.resx">
+      <DependentUpon>201805170640168_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805181539078_Initial.resx">
+      <DependentUpon>201805181539078_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
