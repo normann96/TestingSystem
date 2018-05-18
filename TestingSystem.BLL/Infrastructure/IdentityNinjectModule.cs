@@ -22,12 +22,18 @@ namespace TestingSystem.BLL.Infrastructure
         {
             Bind<AppIdentityDbContext>().To<AppIdentityDbContext>().InRequestScope().WithConstructorArgument(_connectionString);
             Bind<IIdentityUnitOfWork>().To<IdentityUnitOfWork>().InRequestScope();
+            Bind<ITestUnitOfWork>().To<TestUnitOfWork>().InRequestScope();
 
             Bind<IUserService>().To<UserService>();
             Bind<IRoleService>().To<RoleService>();
 
             Bind<IUserRepository>().To<UserRepository>();
             Bind<IRoleRepository>().To<RoleRepository>();
+
+
+            Bind<ITestRepository>().To<TestRepository>();
+            Bind<IQuestionRepository>().To<QuestionRepository>();
+            Bind<IAnswerRepository>().To<AnswerRepository>();
         }
     }
 }
