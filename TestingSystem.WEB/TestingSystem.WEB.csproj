@@ -194,11 +194,15 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RoleAdminController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Account\LoginViewModel.cs" />
     <Compile Include="Models\Account\RegisterViewModel.cs" />
+    <Compile Include="Models\Roles\RoleEditModel.cs" />
+    <Compile Include="Models\Roles\RoleEditViewModel.cs" />
+    <Compile Include="Models\Roles\RoleViewModel.cs" />
     <Compile Include="Models\Users\CreateUserViewModel.cs" />
     <Compile Include="Models\Users\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -211,6 +215,8 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\knowledge.png" />
+    <Content Include="Content\Images\load.gif" />
     <Content Include="Content\signin.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -248,6 +254,8 @@
     <Content Include="Scripts\jquery-3.0.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.0.0.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -291,6 +299,9 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\CreateUser.cshtml" />
+    <Content Include="Views\RoleAdmin\Index.cshtml" />
+    <Content Include="Views\RoleAdmin\EditRole.cshtml" />
+    <Content Include="Views\RoleAdmin\_AddRole.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -302,6 +313,10 @@
     <ProjectReference Include="..\TestingSystem.BLL\TestingSystem.BLL.csproj">
       <Project>{E5AC6C77-2F8F-42B4-AF7C-F6B55D0674B2}</Project>
       <Name>TestingSystem.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestingSystem.Constants\TestingSystem.Constants.csproj">
+      <Project>{1310C0A2-244B-4281-8ECB-4F0D4C75D044}</Project>
+      <Name>TestingSystem.Constants</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
