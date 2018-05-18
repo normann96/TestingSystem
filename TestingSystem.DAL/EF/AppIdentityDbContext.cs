@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.Infrastructure;
+﻿using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using Microsoft.AspNet.Identity.EntityFramework;
 using TestingSystem.DAL.Entities;
 
@@ -14,6 +15,11 @@ namespace TestingSystem.DAL.EF
         {
             System.Data.Entity.Database.SetInitializer(new InitializerDb());
         }
+
+
+        public virtual DbSet<Test> Tests { get; set; }
+        public virtual DbSet<Question> Questions { get; set; }
+        public virtual DbSet<Answer> Answers { get; set; }
     }
 
     public class IdentityContextFactory : IDbContextFactory<AppIdentityDbContext>
