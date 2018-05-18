@@ -100,6 +100,50 @@ namespace TestingSystem.WEB.Controllers
             return View(testViewModel);
         }
 
+        // GET: Test/Details/5
+        public async Task<ActionResult> Details(int? id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var testDto = await TestService.GetByIdAsync(id.Value);
+            if (testDto == null)
+                return HttpNotFound();
+            
+
+            TestViewModel testViewModel = new TestViewModel
+            {
+                Id = testDto.Id,
+                Name = testDto.Name,
+                TestDescription = testDto.TestDescription,
+                Questions = new List<QuestionViewModel>()
+            };
+            foreach (var question in testDto.Questions)
+            {
+                var newQuest = new QuestionViewModel
+                {
+                    Id = question.Id,
+                    Point = question.Point,
+                    TestId = question.TestId,
+                    QuestionContent = question.QuestionContent,
+                    Answers = new List<AnswerViewModel>()
+                };
+                foreach (var answer in question.Answers)
+                {
+                    var newAnsw = new AnswerViewModel
+                    {
+                        Id = answer.Id,
+                        AnswerContent = answer.AnswerContent,
+                        IsTrue = answer.IsTrue,
+                        QuestionId = answer.QuestionId
+                    };
+                    newQuest.Answers.Add(newAnsw);
+                }
+                testViewModel.Questions.Add(newQuest);
+            }
+
+            return View(testViewModel);
+        }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
