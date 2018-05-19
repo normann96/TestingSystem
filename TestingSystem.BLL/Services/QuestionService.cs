@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using TestingSystem.BLL.EntitiesDto;
 using TestingSystem.BLL.Interfaces;
@@ -129,6 +131,86 @@ namespace TestingSystem.BLL.Services
             var answer = await Database.AnswerRepository.GetByIdAsync(answerId);
             var answerResult = Database.AnswerRepository.Delete(answer);
             await Database.SaveAsync();
+        }
+
+        public async Task<QuestionDto> GetFirstByTestIdAsync(int testId)
+        {
+            var question = await Database.QuestionRepository.GetSingleAsync(x => x.TestId == testId);
+            if (question == null)
+                return null;
+
+            var questionDto = new QuestionDto
+            {
+                Id = question.Id,
+                QuestionContent = question.QuestionContent,
+                TestId = question.TestId,
+                Point = question.Point,
+                Answers = new List<AnswerDto>()
+            };
+            foreach (var answer in question.Answers)
+            {
+                questionDto.Answers.Add(new AnswerDto
+                {
+                    Id = answer.Id,
+                    QuestionId = answer.QuestionId,
+                    AnswerContent = answer.AnswerContent,
+                    IsTrue = answer.IsTrue
+                });
+            }
+            return questionDto;
+        }
+
+        public async Task<QuestionDto> GetNextQuestion(int testId, int questionId)
+        {
+            var allQuestions = await Database.QuestionRepository.GetAllAsync(x => x.TestId == testId);
+            var questions = allQuestions.OrderBy(x => x.Id);
+            var allQuestionsDto = new List<QuestionDto>();
+            foreach (var question in questions)
+            {
+                var questionDto = new QuestionDto
+                {
+                    Id = question.Id,
+                    QuestionContent = question.QuestionContent,
+                    Point = question.Point,
+                    TestId = question.TestId,
+                    Answers = new List<AnswerDto>()
+                };
+                foreach (var answer in question.Answers)
+                {
+                    var answerDto = new AnswerDto
+                    {
+                        Id = answer.Id,
+                        QuestionId = answer.QuestionId,
+                        AnswerContent = answer.AnswerContent,
+                        IsTrue = answer.IsTrue,
+                    };
+                    (questionDto.Answers as List<AnswerDto>)?.Add(answerDto);
+                }
+                allQuestionsDto.Add(questionDto);
+            }
+
+            Queue<QuestionDto> queue = new Queue<QuestionDto>();
+            allQuestionsDto.ForEach(x => queue.Enqueue(x));
+
+            QuestionDto currQuest = null;
+            while (queue.Count > 0)
+            {
+                if (questionId == 0)
+                    break;
+
+                currQuest = queue.Dequeue();
+                if (currQuest.Id == questionId)
+                {
+                    currQuest = null;
+                    break;
+                }
+
+            }
+
+            if (queue.Count > 0)
+                return queue.Dequeue();
+
+            return currQuest;
         }
 
         #endregion

@@ -12,5 +12,7 @@ namespace TestingSystem.BLL.Interfaces
         Task UpdateAsync(QuestionDto questionDto);
         Task DeleteAsync(int questionId);
         Task DeleteAnswerAsync(int answerId);
+        Task<QuestionDto> GetFirstByTestIdAsync(int testId);
+        Task<QuestionDto> GetNextQuestion(int testId, int questionId);
     }
 }
