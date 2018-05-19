@@ -207,6 +207,7 @@
     <Compile Include="Models\Roles\RoleViewModel.cs" />
     <Compile Include="Models\Tests\AnswerViewModel.cs" />
     <Compile Include="Models\Tests\QuestionViewModel.cs" />
+    <Compile Include="Models\Tests\ResultViewModel.cs" />
     <Compile Include="Models\Tests\TestViewModel.cs" />
     <Compile Include="Models\Users\CreateUserViewModel.cs" />
     <Compile Include="Models\Users\UserViewModel.cs" />
@@ -316,6 +317,8 @@
     <Content Include="Views\Question\_AddAnswer.cshtml" />
     <Content Include="Views\Question\_AnswerTargetResult.cshtml" />
     <Content Include="Views\Question\DeleteAnswer.cshtml" />
+    <Content Include="Views\Test\ShowQuestion.cshtml" />
+    <Content Include="Views\Test\GetResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
