@@ -9,7 +9,7 @@ namespace TestingSystem.WEB.Models.Account
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Required field Email")]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Please enter a valid email address.")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
