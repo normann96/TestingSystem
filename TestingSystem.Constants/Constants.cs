@@ -11,4 +11,9 @@ namespace TestingSystem.Constants
         public const string Admin = "Administrators";
         public const string User = "Users";
     }
+
+    public static class TestPast
+    {
+        public const float PastPercentage = 0.8f; 
+    }
 }
