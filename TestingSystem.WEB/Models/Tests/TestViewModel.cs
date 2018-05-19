@@ -18,6 +18,6 @@ namespace TestingSystem.WEB.Models.Tests
         [Display(Name = "Description")]
         public string TestDescription { get; set; }
 
-        public ICollection<QuestionViewModel> Questions { get; set; }
+        public IList<QuestionViewModel> Questions { get; set; }
     }
 }
