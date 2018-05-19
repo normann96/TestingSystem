@@ -1,0 +1,33 @@
+﻿@model TestingSystem.WEB.Models.Tests.AnswerViewModel
+
+@{
+    ViewBag.Title = "Delete Answer";
+}
+
+<br/>
+<div class="card w-50">
+    <div class="card-header">
+        <h3>Are you sure you want to delete this?</h3>
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            @Html.DisplayFor(model => model.AnswerContent)
+        </div>
+    </div>
+    <div class="card-footer">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <input data-val="true" name="answerId" type="hidden" value="@Model.Id">
+            <input data-val="true" name="questionId" type="hidden" value="@Model.QuestionId">
+
+            <div class="form-group">
+                <input type="submit" value="Yes" class="btn btn-danger" />
+                @Html.ActionLink("Back", "Edit", "Question", new { Model.QuestionId },null)
+            </div>
+        }
+    </div>
+</div>
+
+

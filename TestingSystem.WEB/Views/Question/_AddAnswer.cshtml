@@ -1,0 +1,55 @@
+﻿@model TestingSystem.WEB.Models.Tests.AnswerViewModel
+
+@{
+    int count = ViewBag.CountAnswer;
+    string answerId = "Answers_" + count + "__Id";
+    string answerName = "Answers[" + count + "].Id";
+
+    string answerQuestionId = "Answers_" + count + "__QuestionId";
+    string answerQuestionName = "Answers[" + count + "].QuestionId";
+
+    string answerContentId = "Answers_" + count + "__AnswerContent";
+    string answerContentName = "Answers[" + count + "].AnswerContent";
+
+    string answerIsTrueId = "Answers_" + count + "__IsTrue";
+    string answerIsTrueName = "Answers[" + count + "].IsTrue";
+    count++;
+}
+
+
+<input data-val="true" data-val-number="Значением поля Id должно быть число." data-val-required="Требуется поле Id." id="@answerId" name="@answerName" value="@Model.Id" type="hidden">
+<input data-val="true" data-val-number="Значением поля QuestionId должно быть число." data-val-required="Требуется поле QuestionId." id="@answerQuestionId" name="@answerQuestionName" value="@Model.QuestionId" type="hidden">
+
+
+<table class="table table-sm table-bordered table-dark table-hover">
+    <thead class="bg-warning">
+        <tr class="text-center">
+            <th scope="col" style="width: 34px">#</th>
+            <th scope="col" style="width: 94px">IsTrue</th>
+            <th scope="col" width="65%">New Answer</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="text-center align-middle" style="width: 34px">@count</td>
+
+            <td class="text-center align-middle" style="width: 94px">
+                @*@Html.EditorFor(model => Model.IsTrue, new { htmlAttributes = new { @class = "form-control", style = "" } })*@
+                <input class="form-control check-box" data-val="true" data-val-required="Требуется поле IsTrue." id="@answerIsTrueId" name="@answerIsTrueName" style="" value="true" type="checkbox">
+                <input name="@answerIsTrueName" value="false" type="hidden">
+            </td>
+            <td width="65%">
+                <textarea class="form-control text-white bg-dark" cols="20" data-val="true" data-val-required="Требуется поле AnswerContent." id="@answerContentId" name="@answerContentName" rows="2" style="font-size: small; font-weight: bold; max-width:800px; max-height: 80px;min-height: 80px;"></textarea>
+                @*@Html.TextAreaFor(modelItem => Model.AnswerContent, new { @class = "form-control text-white bg-dark", style = "font-size: small; font-weight: bold; max-width:800px; max-height: 80px;min-height: 80px;" })*@
+            </td>
+
+
+            <td class="text-center align-middle">
+                @*@Html.ActionLink("Save", "Edit", "Question", new { questionId = question.Id }, new { @class = "btn-sm btn-sm btn-primary" })*@
+                <div class="btn btn-sm btn-danger disabled">Delete</div>
+                @*@Html.ActionLink("Delete", "Delete", "Question", new { questionId = Model.Id, testId = Model.QuestionId }, new { @class = "btn-sm btn-sm btn-danger" })*@
+            </td>
+        </tr>
+    </tbody>
+</table>
