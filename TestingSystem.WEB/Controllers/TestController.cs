@@ -95,7 +95,7 @@ namespace TestingSystem.WEB.Controllers
                     TestDescription = testViewModel.TestDescription,
                 };
                 await TestService.UpdateAsync(testDto);
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Test", new { id = testViewModel.Id });
             }
             return View(testViewModel);
         }
