@@ -20,6 +20,8 @@ namespace TestingSystem.DAL.EF
         public virtual DbSet<Test> Tests { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<Answer> Answers { get; set; }
+        public virtual DbSet<TestResult> TestResults { get; set; }
+        public virtual DbSet<QuestionResult> QuestionResults { get; set; }
     }
 
     public class IdentityContextFactory : IDbContextFactory<AppIdentityDbContext>
