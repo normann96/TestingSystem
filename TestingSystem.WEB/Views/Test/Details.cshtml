@@ -3,64 +3,191 @@
 @{
     ViewBag.Title = "Details Test";
     int count = 0;
+    int questionId = 0;
 }
 
-<br/>
-<div class="card">
-    <div class="card-header">
-        <h4 style="text-align: center; font-weight: bold;">@Model.Name</h4>
+<br />
+
+@using (Html.BeginForm("Edit", "Test"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container col-md-8 pl-0 ml-0">
+        <div class="card">
+            <div class="card-header">
+                <h4 style="font-weight: bold;">Edit test</h4>
+            </div>
+
+            <div class="card-body">
+                @Html.HiddenFor(m => Model.Id)
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <label style="font-weight: bold; padding-bottom: 10px">
+                        @Html.DisplayNameFor(model => model.Name)
+                    </label>
+
+                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control", style = "max-width: 800px" })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <div style="font-weight: bold; padding-bottom: 10px">
+                        @Html.DisplayNameFor(model => model.TestDescription)
+                    </div>
+                    @Html.TextAreaFor(model => model.TestDescription, new { @class = "form-control bg-light", style = "font-size: small; max-width:800px; max-height: 80px;min-height: 120px;" })
+                    @Html.ValidationMessageFor(model => model.TestDescription, "", new { @class = "text-danger" })
+                </div>
+
+                @if (Model.Questions.Count > 0)
+                {
+                    <table class="table table-sm table-bordered table-dark table-hover">
+                        <thead class="bg-primary">
+                            <tr class="text-center">
+                                <th scope="col">#</th>
+                                <th scope="col" width="70%">Question</th>
+                                <th scope="col">Point</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var question in Model.Questions)
+                            {
+                                count++;
+                                <tr>
+                                    <td class="text-center">@count</td>
+                                    <td width="70%">@Html.DisplayFor(modelItem => question.QuestionContent)</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => question.Point)</td>
+                                    <td class="text-center">
+                                        @{ questionId = question.Id; }
+                                        @Html.ActionLink("Edit", "Edit", "Question", new { questionId = question.Id }, new { @class = "btn btn-sm btn-primary" })
+                                        @Html.ActionLink("Delete", "DeleteQuestion", "Question", new { questionId = question.Id, testId = question.TestId }, new { @class = "btn btn-sm btn-danger", data_toggle = "modal", data_target = "#ModalQuestDelete", role = "button" })
+                                    </td>
+                                </tr>
+                            }
+                            <tr id="addQuestion"></tr>
+                        </tbody>
+                    </table>
+                    <img id="createQuestion" src="~/Content/Images/load.gif" style="display: none; width: auto; position: center" />
+                }
+                else
+                {
+                    <p> - There are no questions in the test.</p>
+                }
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-lg-auto">
+                    <button type="submit" value="Save" class="btn btn-success">Save</button>
+                </div>
+                <div class="col-lg-auto">
+                    @Html.ActionLink("Add question", "AddQuestion", "Question", new { id = Model.Id }, new { @class = "btn btn-primary", data_toggle = "modal", data_target = "#ModalQuest", role = "button" })
+                </div>
+                <div class="col-lg-auto">
+                    @Html.ActionLink("Back to test", "Index", "Test", null, new { @class = "btn btn-outline-info", role = "button" })
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
-
-        <h5 style="font-weight: bold; padding-bottom: 10px">
-            @Model.TestDescription
-        </h5>
+}
 
 
-        @if (Model.Questions.Count > 0)
-        {
-            <table class="table table-sm table-bordered table-dark table-hover">
-                <thead class="bg-primary">
-                    <tr class="text-center">
-                        <th scope="col">#</th>
-                        <th scope="col" width="70%">Question</th>
-                        <th scope="col">Point</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
+<div class="container">
+    <!-- The Modal PopUp-->
+    <div class="modal fade " id="ModalQuestDelete">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content align-middle">
 
-                <tbody>
-                    @foreach (var question in Model.Questions)
-                    {
-                        count++;
-                        <tr>
-                            <td class="text-center">@count</td>
-                            <td width="70%">@Html.DisplayFor(modelItem => question.QuestionContent)</td>
-                            <td class="text-center">@Html.DisplayFor(modelItem => question.Point)</td>
-                            <td class="text-center">
-                                @Html.ActionLink("Edit", "Edit", "Question", new { questionId = question.Id }, new { @class = "btn btn-sm btn-primary" })
-                                @Html.ActionLink("Delete", "Delete", "Question", new { questionId = question.Id, testId = question.TestId }, new { @class = "btn btn-sm btn-danger" })
-                            </td>
-                        </tr>
-                    }
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete question</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
 
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <p> - There are no questions in the test.</p>
-        }
+                @using (Ajax.BeginForm("DeleteQuestion", "Question", new AjaxOptions
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "deleteQuestion",
+                    LoadingElementId = "deleteQuestion",
+                    //LoadingElementDuration = 10000
+                }))
+                {
 
+                    <input data-val="true" name="questionId" type="hidden" value="@questionId">
+                    <input data-val="true" name="testId" type="hidden" value="@Model.Id">
 
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <h5>Are you sure you want to delete this question?</h5>
+                        </div>
+                        <div class="form-group">
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Yes</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="card-footer">
-    <div>
-        @Html.ActionLink("Add question", "Create", "Question", new { id = Model.Id }, new { @class = "btn btn-primary" })
-        @Html.ActionLink("Back to tests", "Index", null, new { @class = "btn btn-outline-info" })
+
+<div class="container">
+    <!-- The Modal PopUp-->
+    <div class="modal fade " id="ModalQuest">
+        <div class="modal-dialog">
+            <div class="modal-content align-middle">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Add question</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                @using (Ajax.BeginForm("AddQuestion", "Question", new AjaxOptions
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "addQuestion",
+                    LoadingElementId = "createQuestion",
+                    //LoadingElementDuration = 10000
+                }))
+                {
+                    @Html.HiddenFor(m => Model.Id)
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input name="name" value="" class="form-control" required="" placeholder="Enter a question" data-val-required="Required field Name:." />
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control"
+                                   data-val="true"
+                                   required=""
+                                   data-val-number="The field Point: must be a number."
+                                   data-val-range="The number must be in the range from 1 to 10"
+                                   data-val-range-max="10"
+                                   data-val-range-min="1"
+                                   data-val-required="Required field Point:."
+                                   id="Point"
+                                   name="Point"
+                                   value="1"
+                                   type="number"
+                                   placeholder="Enter a score of question" />
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Add </button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 </div>
-
-

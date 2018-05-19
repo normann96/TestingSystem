@@ -12,43 +12,41 @@
 {
     @Html.AntiForgeryToken()
 
-    <div>
-        <div class="container col-md-8 pl-0 ml-0">
-            <div class="card">
-                <div class="card-header">
-                    <h4 style="font-weight: bold;">Edit test</h4>
-                </div>
-
-                <div class="card-body">
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
-                        <label style="font-weight: bold; padding-bottom: 10px">
-                            @Html.DisplayNameFor(model => model.Name)
-                        </label>
-
-                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control", style = "max-width: 800px" })
-                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-                    </div>
-
-                    <div class="form-group">
-                        <div style="font-weight: bold; padding-bottom: 10px">
-                            @Html.DisplayNameFor(model => model.TestDescription)
-                        </div>
-                        @Html.TextAreaFor(model => model.TestDescription, new { @class = "form-control bg-light", style = "font-size: small; max-width:800px; max-height: 80px;min-height: 120px;" })
-                        @Html.ValidationMessageFor(model => model.TestDescription, "", new { @class = "text-danger" })
-                    </div>
-                </div>
+    <div class="container col-md-8 pl-0 ml-0">
+        <div class="card">
+            <div class="card-header">
+                <h4 style="font-weight: bold;">Edit test</h4>
             </div>
 
-            <div class="card-footer">
-                <div class="row">
-                    <div class="col-lg-auto">
-                        <button type="submit" value="Save" class="btn btn-success">Save</button>
-                    </div>
+            <div class="card-body">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <label style="font-weight: bold; padding-bottom: 10px">
+                        @Html.DisplayNameFor(model => model.Name)
+                    </label>
 
-                    <div class="col-lg-auto">
-                        @Html.ActionLink("Back to test", "Index", "Test", null, new { @class = "btn btn-outline-info", role = "button" })
+                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control", style = "max-width: 800px" })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <div style="font-weight: bold; padding-bottom: 10px">
+                        @Html.DisplayNameFor(model => model.TestDescription)
                     </div>
+                    @Html.TextAreaFor(model => model.TestDescription, new { @class = "form-control bg-light", style = "font-size: small; max-width:800px; max-height: 80px;min-height: 120px;" })
+                    @Html.ValidationMessageFor(model => model.TestDescription, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-lg-auto">
+                    <button type="submit" value="Save" class="btn btn-success">Save</button>
+                </div>
+
+                <div class="col-lg-auto">
+                    @Html.ActionLink("Back to test", "Index", "Test", null, new { @class = "btn btn-outline-info", role = "button" })
                 </div>
             </div>
         </div>
