@@ -9,7 +9,8 @@ namespace TestingSystem.DAL.Interfaces
         ITestRepository TestRepository { get; }
         IQuestionRepository QuestionRepository { get; }
         IAnswerRepository AnswerRepository { get; }
-
+        IQuestionResultRepository QuestionResultRepository { get; }
+        ITestResultRepository TestResultRepository { get; }
         Task SaveAsync();
     }
 }

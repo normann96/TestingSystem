@@ -12,17 +12,23 @@ namespace TestingSystem.DAL.Repositories
         public ITestRepository TestRepository { get; private set; }
         public IQuestionRepository QuestionRepository { get; private set; }
         public IAnswerRepository AnswerRepository { get; private set; }
+        public IQuestionResultRepository QuestionResultRepository { get; private set; }
+        public ITestResultRepository TestResultRepository { get; private set; }
 
         public TestUnitOfWork(AppIdentityDbContext db,
                                 ITestRepository testRepository,
                                 IQuestionRepository questionRepository,
-                                IAnswerRepository answerRepository)
+                                IAnswerRepository answerRepository,
+                                ITestResultRepository testResultRepositoryRepository,
+                                IQuestionResultRepository questionResultRepository)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
 
             TestRepository = testRepository ?? throw new ArgumentNullException(nameof(testRepository));
             QuestionRepository = questionRepository ?? throw new ArgumentNullException(nameof(questionRepository));
             AnswerRepository = answerRepository ?? throw new ArgumentNullException(nameof(answerRepository));
+            TestResultRepository = testResultRepositoryRepository ?? throw new ArgumentNullException(nameof(testResultRepositoryRepository));
+            QuestionResultRepository = questionResultRepository ?? throw new ArgumentNullException(nameof(questionResultRepository));
         }
 
         public async Task SaveAsync()
@@ -35,6 +41,8 @@ namespace TestingSystem.DAL.Repositories
             TestRepository = null;
             QuestionRepository = null;
             AnswerRepository = null;
+            TestResultRepository = null;
+            QuestionResultRepository = null;
             _db?.Dispose();
         }
     }
