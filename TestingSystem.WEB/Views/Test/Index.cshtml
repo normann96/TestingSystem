@@ -14,9 +14,9 @@
         <table class="table table-striped table-bordered">
             <tr>
                 <th class="text-center">#</th>
-                <th class="text-center">Название</th>
-                <th class="text-center" colspan="3">Описание</th>
-                <th class="text-center">Действия</th>
+                <th class="text-center" style="width: 20%">Name</th>
+                <th class="text-center" style="width: 50%">Descri[tion</th>
+                <th class="text-center">Actions</th>
             </tr>
 
             @foreach (var item in Model)
@@ -25,32 +25,27 @@
                 @Html.HiddenFor(modelItem => item.Id)
                 <tr>
                     <td class="text-center">@count</td>
-                    <td>@Html.ActionLink(item.Name, "Edit", new { item.Id })</td>
+                    <td style="width: 20%">@Html.DisplayFor(modelItem => item.Name)</td>
 
-                    <td colspan="3">@Html.DisplayFor(modelItem => item.TestDescription)</td>
-
+                    <td style="width:50%">@Html.DisplayFor(modelItem => item.TestDescription)</td>
                     <td class="text-center">
 
-                        @using (Html.BeginForm("RunTest", "Test", null, FormMethod.Post))
-                        {
-                            @Html.AntiForgeryToken()
-                            <input data-val="true" name="Id" type="hidden" value="@item.Id">
+                        <div class="row justify-content-center">
+                            @using (Html.BeginForm("RunTest", "Test", null, FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input data-val="true" name="Id" type="hidden" value="@item.Id">
 
-                            <div class="row justify-content-center">
                                 <div class="col-lg-auto">
                                     <button type="submit" value="Run" class="btn btn-sm btn-success">Run</button>
                                 </div>
-                                <div class="col-lg-auto">
-                                    @Html.ActionLink("Details", "Details", "Test", new { id = item.Id }, new { @class = "btn btn-sm btn-primary", role = "button" })
-                                </div>
-                                @*<div class="col-lg-auto">
-                                        @Html.ActionLink("Delete", "Delete", "Test", new { id = item.Id }, new { @class = "btn btn-sm btn-danger", role = "button" })
-                                    </div>*@
-                            </div>
-                        }
+                            }
 
-                        @*ToDo: Remove from here. For Test Delete*@
-                        @using (Html.BeginForm("Delete", "Test"))
+                            <div class="col-lg-auto">
+                                @Html.ActionLink("Details", "Details", "Test", new { id = item.Id }, new { @class = "btn btn-sm btn-primary", role = "button" })
+                            </div>
+
+                            @using (Html.BeginForm("Delete", "Test"))
                             {
                                 @Html.AntiForgeryToken()
                                 <input data-val="true" name="Id" type="hidden" value="@item.Id">
@@ -58,6 +53,7 @@
                                     <input type="submit" value="Confirm" class="btn btn-sm btn-danger" />
                                 </div>
                             }
+                        </div>
                     </td>
                 </tr>
             }

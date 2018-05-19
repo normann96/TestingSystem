@@ -7,7 +7,7 @@
 
         <ul class="nav navbar-nav nav-pills">
             <li class="btn">
-                @Html.ActionLink("Hello, " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "btn btn-outline-info" })
+                @Html.ActionLink("Hello, " + User.Identity.GetUserName() + "!", "Contact", "Home", routeValues: null, htmlAttributes: new { title = "Contact", @class = "btn btn-outline-info" })
             </li>
             <li class="btn">
                 @Html.ActionLink("Logout", "Logout", "Account", null, new { @class = "btn btn-outline-primary" })

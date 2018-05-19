@@ -1,0 +1,49 @@
+﻿@model TestingSystem.WEB.Models.Tests.QuestionViewModel
+
+@{
+    ViewBag.Title = "Show Question";
+}
+
+<br />
+<div class="card w-75">
+    @using (Html.BeginForm("GoNextQuestion", "Test", null, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <input data-val="true" name="Id" type="hidden" value="@Model.Id">
+        <input data-val="true" name="TestId" type="hidden" value="@Model.TestId">
+        <input data-val="true" name="testName" type="hidden" value="@ViewBag.TestName">
+        @Html.HiddenFor(model => Model.Answers)
+        @Html.HiddenFor(model => Model.QuestionContent)
+        @Html.HiddenFor(model => Model.Point)
+
+
+        <div class="card-header">
+            <h4>@ViewBag.TestName</h4>
+        </div>
+
+        <h5 class="ml-4 pt-3 text-danger">Choose a right answer and press the button "Submit answer" to go a next question</h5>
+
+        <div class="card-body">
+
+            <ul class="list-group">
+                <li class="list-group-item active">@Model.QuestionContent</li>
+                @foreach (var answer in Model.Answers)
+                {
+                    <li class="list-group-item">
+                        <div class="input-group-text">
+                            <input type="checkbox" name="answersId" value="@answer.Id" aria-label="Checkbox for following text input">
+                            <div class="ml-4">@Html.DisplayFor(modelItem => answer.AnswerContent, null, new { @class = "form-control", aria_label = "Text input with checkbox", type = "text" })</div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <div class="card-footer">
+            <input type="submit" value="Submit answer" class="btn btn-success" />
+        </div>
+    }
+</div>
+
+

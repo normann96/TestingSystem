@@ -8,6 +8,7 @@
 
 <br />
 
+
 @using (Html.BeginForm("Edit", "Test"))
 {
     @Html.AntiForgeryToken()
@@ -53,13 +54,13 @@
                         <tbody>
                             @foreach (var question in Model.Questions)
                             {
+                                questionId = Model.Questions[count].Id;
                                 count++;
                                 <tr>
                                     <td class="text-center">@count</td>
                                     <td width="70%">@Html.DisplayFor(modelItem => question.QuestionContent)</td>
                                     <td class="text-center">@Html.DisplayFor(modelItem => question.Point)</td>
                                     <td class="text-center">
-                                        @{ questionId = question.Id; }
                                         @Html.ActionLink("Edit", "Edit", "Question", new { questionId = question.Id }, new { @class = "btn btn-sm btn-primary" })
                                         @Html.ActionLink("Delete", "DeleteQuestion", "Question", new { questionId = question.Id, testId = question.TestId }, new { @class = "btn btn-sm btn-danger", data_toggle = "modal", data_target = "#ModalQuestDelete", role = "button" })
                                     </td>
@@ -96,7 +97,7 @@
 
 <div class="container">
     <!-- The Modal PopUp-->
-    <div class="modal fade " id="ModalQuestDelete">
+    <div class="modal fade" id="ModalQuestDelete">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content align-middle">
 
@@ -114,11 +115,11 @@
                     //LoadingElementDuration = 10000
                 }))
                 {
-
-                    <input data-val="true" name="questionId" type="hidden" value="@questionId">
+                    <input data-val="true" name="questionId" id="questionId" type="hidden" value="@questionId">
                     <input data-val="true" name="testId" type="hidden" value="@Model.Id">
 
                     <div class="modal-body">
+
                         <div class="form-group">
                             <h5>Are you sure you want to delete this question?</h5>
                         </div>
@@ -161,6 +162,7 @@
                     @Html.HiddenFor(m => Model.Id)
                     <!-- Modal body -->
                     <div class="modal-body">
+
                         <div class="form-group">
                             <input name="name" value="" class="form-control" required="" placeholder="Enter a question" data-val-required="Required field Name:." />
                         </div>
@@ -191,3 +193,4 @@
         </div>
     </div>
 </div>
+
