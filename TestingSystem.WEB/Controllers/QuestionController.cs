@@ -39,20 +39,139 @@ namespace TestingSystem.WEB.Controllers
                 await QuestionService.CreateAsync(questionDto);
                 return RedirectToAction("Details", "Test", new { id = questionDto.TestId });
             }
-            return PartialView("_AddQuestion", new QuestionViewModel{QuestionContent = name, TestId = id, Point = point});
+            return PartialView("_AddQuestion", new QuestionViewModel { QuestionContent = name, TestId = id, Point = point });
+        }
+
+
+        // GET: Question/Edit/5
+        public async Task<ActionResult> Edit(int? questionId)
+        {
+            if (questionId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var questionDto = await QuestionService.GetByIdAsync(questionId.Value);
+            if (questionDto == null)
+            {
+                return HttpNotFound();
+            }
+            QuestionViewModel questionViewModel = new QuestionViewModel
+            {
+                Id = questionDto.Id,
+                QuestionContent = questionDto.QuestionContent,
+                TestId = questionDto.TestId,
+                Point = questionDto.Point,
+                Answers = new List<AnswerViewModel>()
+            };
+            foreach (var answer in questionDto.Answers)
+            {
+                var newAnswer = new AnswerViewModel
+                {
+                    Id = answer.Id,
+                    AnswerContent = answer.AnswerContent,
+                    IsTrue = answer.IsTrue,
+                    QuestionId = answer.QuestionId
+                };
+                (questionViewModel.Answers as List<AnswerViewModel>)?.Add(newAnswer);
+            }
+
+            return View(questionViewModel);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(QuestionViewModel questionViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var questDto = new QuestionDto
+                {
+                    Id = questionViewModel.Id,
+                    Point = questionViewModel.Point,
+                    TestId = questionViewModel.TestId,
+                    QuestionContent = questionViewModel.QuestionContent,
+                    Answers = new List<AnswerDto>()
+                };
+
+                if (questionViewModel.Answers != null)
+                {
+                    foreach (var answer in questionViewModel.Answers)
+                    {
+                        questDto.Answers.Add(new AnswerDto
+                        {
+                            Id = answer.Id,
+                            AnswerContent = answer.AnswerContent,
+                            IsTrue = answer.IsTrue,
+                            QuestionId = answer.QuestionId
+                        });
+                    }
+                }
+                questionViewModel.Answers = new List<AnswerViewModel>();
+                await QuestionService.UpdateAsync(questDto);
+                return RedirectToAction("Edit", "Question", new { questionId = questDto.Id });
+            }
+            return View(questionViewModel);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> AddAnswer(int? testId, int? id, int? count)
+        {
+            if (testId == null || id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var question = await QuestionService.GetByIdAsync(id.Value);
+            if (question == null)
+                return HttpNotFound("Question not found");
+
+            AnswerViewModel answerView = new AnswerViewModel { QuestionId = id.Value};
+            ViewBag.QuestionName = question.QuestionContent;
+            
+            ViewBag.CountAnswer = count;
+            return PartialView("_AddAnswer", answerView);
         }
 
 
         [HttpPost]
         public async Task<ActionResult> DeleteQuestion([Required] int? questionId, [Required] int? testId)
         {
-            if(testId == null)
-                return RedirectToAction("Index", "Test");
+            if (testId == null || questionId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            if (questionId != null)
-                await QuestionService.DeleteAsync(questionId.Value);
-            
+            await QuestionService.DeleteAsync(questionId.Value);
             return RedirectToAction("Details", "Test", new { id = testId.Value });
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult> DeleteAnswer([Required] int? answerId)
+        {
+            if (answerId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            
+            var answerDto = await QuestionService.GetAnswerByIdAsync(answerId.Value);
+            if (answerDto == null)
+                return HttpNotFound();
+            
+            AnswerViewModel answerViewModel = new AnswerViewModel
+            {
+                Id = answerDto.Id,
+                AnswerContent = answerDto.AnswerContent,
+                IsTrue = answerDto.IsTrue,
+                QuestionId = answerDto.QuestionId
+            };
+            return View(answerViewModel);
+        }
+
+
+        // POST: Question/Delete/5
+        [HttpPost, ActionName("DeleteAnswer")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteConfirmed(int answerId, int questionId)
+        {
+            await QuestionService.DeleteAnswerAsync(answerId);
+            return RedirectToAction("Edit", "Question", new { questionId });
         }
 
 
