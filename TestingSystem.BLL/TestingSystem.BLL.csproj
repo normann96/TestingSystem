@@ -63,14 +63,17 @@
     <Compile Include="EntitiesDto\QuestionDto.cs" />
     <Compile Include="EntitiesDto\RoleDto.cs" />
     <Compile Include="EntitiesDto\TestDto.cs" />
+    <Compile Include="EntitiesDto\TestResultDto.cs" />
     <Compile Include="EntitiesDto\UserDto.cs" />
     <Compile Include="Infrastructure\IdentityNinjectModule.cs" />
     <Compile Include="Interfaces\IQuestionService.cs" />
+    <Compile Include="Interfaces\IResultService.cs" />
     <Compile Include="Interfaces\IRoleService.cs" />
     <Compile Include="Interfaces\ITestService.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\QuestionService.cs" />
+    <Compile Include="Services\ResultService.cs" />
     <Compile Include="Services\RoleService.cs" />
     <Compile Include="Services\TestService.cs" />
     <Compile Include="Services\UserService.cs" />
