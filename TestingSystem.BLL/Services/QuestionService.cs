@@ -108,6 +108,29 @@ namespace TestingSystem.BLL.Services
             await Database.SaveAsync();
         }
 
+        public async Task<AnswerDto> GetAnswerByIdAsync(int answerId)
+        {
+            var answer = await Database.AnswerRepository.GetByIdAsync(answerId);
+            if (answer == null) return null;
+
+            var answerDto = new AnswerDto
+            {
+                Id = answer.Id,
+                AnswerContent = answer.AnswerContent,
+                IsTrue = answer.IsTrue,
+                QuestionId = answer.QuestionId
+            };
+
+            return answerDto;
+        }
+
+        public async Task DeleteAnswerAsync(int answerId)
+        {
+            var answer = await Database.AnswerRepository.GetByIdAsync(answerId);
+            var answerResult = Database.AnswerRepository.Delete(answer);
+            await Database.SaveAsync();
+        }
+
         #endregion
         public void Dispose()
         {
