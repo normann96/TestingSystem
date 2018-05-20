@@ -14,7 +14,6 @@ using TestingSystem.WEB.Models.Users;
 namespace TestingSystem.WEB.Controllers
 {
     [Authorize(Roles = RoleName.Admin)]
-
     public class AdminController : Controller
     {
         private IUserService UserService { get; }
