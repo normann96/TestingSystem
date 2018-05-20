@@ -320,6 +320,8 @@
     <Content Include="Views\Test\ShowQuestion.cshtml" />
     <Content Include="Views\Test\GetResult.cshtml" />
     <Content Include="Views\Test\IndexForAdmin.cshtml" />
+    <Content Include="Views\Shared\_SearchPartial.cshtml" />
+    <Content Include="Views\Test\_TestSearch.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
