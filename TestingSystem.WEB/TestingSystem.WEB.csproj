@@ -193,6 +193,7 @@
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\RoleAdminController.cs" />
@@ -221,6 +222,9 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\400.png" />
+    <Content Include="Content\Images\403.jpg" />
+    <Content Include="Content\Images\404.png" />
     <Content Include="Content\Images\knowledge.png" />
     <Content Include="Content\Images\load.gif" />
     <Content Include="Content\signin.css" />
@@ -322,6 +326,9 @@
     <Content Include="Views\Test\IndexForAdmin.cshtml" />
     <Content Include="Views\Shared\_SearchPartial.cshtml" />
     <Content Include="Views\Test\_TestSearch.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Error\BadRequest.cshtml" />
+    <Content Include="Views\Error\Forbidden.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
