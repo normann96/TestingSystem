@@ -1,9 +1,11 @@
 ﻿@model IEnumerable<TestingSystem.WEB.Models.Tests.TestViewModel>
 
+
 @{
-    ViewBag.Title = "All Tests";
+    ViewBag.Title = "All Tests for Admin";
     int count = 0;
 }
+
 
 <br />
 <div class="card">
@@ -31,14 +33,26 @@
                     <td class="text-center">
 
                         <div class="row justify-content-center">
-                            @using (Html.BeginForm("RunTest", "Test", FormMethod.Post, null))
+                            @using (Html.BeginForm("RunTest", "Test", null, FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
-                                
                                 <input data-val="true" name="Id" type="hidden" value="@item.Id">
 
                                 <div class="col-lg-auto">
-                                    <button type="submit" value="Start test" class="btn btn-sm btn-success">Start test</button>
+                                    <button type="submit" value="Run" class="btn btn-sm btn-success">Run</button>
+                                </div>
+                            }
+
+                            <div class="col-lg-auto">
+                                @Html.ActionLink("Details", "Details", "Test", new { id = item.Id }, new { @class = "btn btn-sm btn-primary", role = "button" })
+                            </div>
+
+                            @using (Html.BeginForm("Delete", "Test"))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input data-val="true" name="Id" type="hidden" value="@item.Id">
+                                <div class="col-lg-auto">
+                                    <input type="submit" value="Confirm" class="btn btn-sm btn-danger" />
                                 </div>
                             }
                         </div>
@@ -49,5 +63,6 @@
     </div>
 
     <div class="card-footer">
+        @Html.ActionLink("Add a new test", "CreateTest", null, new { @class = "btn btn-primary" })
     </div>
 </div>
