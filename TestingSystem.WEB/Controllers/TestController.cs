@@ -179,7 +179,7 @@ namespace TestingSystem.WEB.Controllers
             var questionDto = await QuestionService.GetFirstByTestIdAsync(id.Value);
 
             if (questionDto == null)
-                return HttpNotFound("Question not found");
+                return HttpNotFound("There are no questions in the test.");
 
             var questionView = new QuestionViewModel
             {

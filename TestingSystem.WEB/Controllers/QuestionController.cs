@@ -25,25 +25,23 @@ namespace TestingSystem.WEB.Controllers
             TestService = testService ?? throw new ArgumentNullException(nameof(testService));
         }
 
-
         [HttpPost]
-        public async Task<ActionResult> AddQuestion([Required] string name, int point, int id)
+        public async Task<ActionResult> AddQuestion([Bind(Exclude = "Answers")] QuestionViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 var questionDto = new QuestionDto
                 {
-                    QuestionContent = name,
-                    TestId = id,
-                    Point = point,
+                    QuestionContent = viewModel.QuestionContent,
+                    TestId = viewModel.TestId,
+                    Point = viewModel.Point,
                     Answers = new List<AnswerDto>()
                 };
                 await QuestionService.CreateAsync(questionDto);
                 return RedirectToAction("Details", "Test", new { id = questionDto.TestId });
             }
-            return PartialView("_AddQuestion", new QuestionViewModel { QuestionContent = name, TestId = id, Point = point });
+            return PartialView("_AddQuestion", viewModel);
         }
-
 
 
         // GET: Question/Edit/5
