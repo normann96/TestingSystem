@@ -30,6 +30,11 @@ namespace TestingSystem.DAL.Repositories
             return await UserManager.FindByIdAsync(userId);
         }
 
+        public async Task<AppUser> FindByNameAsync(string userName)
+        {
+            return await UserManager.FindByNameAsync(userName);
+        }
+
         public async Task<IdentityResult> CreateAsync(AppUser user, string password)
         {
             return await UserManager.CreateAsync(user, password);

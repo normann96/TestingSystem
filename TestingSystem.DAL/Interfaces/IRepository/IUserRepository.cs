@@ -9,6 +9,7 @@ namespace TestingSystem.DAL.Interfaces.IRepository
     {
         Task<AppUser> FindAsync(string userName, string password);
         Task<AppUser> FindByIdAsync(string userId);
+        Task<AppUser> FindByNameAsync(string userName);
         Task<IdentityResult> CreateAsync(AppUser user, string password);
         Task<ClaimsIdentity> CreateIdentityAsync(AppUser user, string authenticationType);
         Task<IdentityResult> UpdateAsync(AppUser user);
