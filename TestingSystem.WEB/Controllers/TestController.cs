@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using TestingSystem.BLL.EntitiesDto;
 using TestingSystem.BLL.Interfaces;
 using TestingSystem.BLL.Services;
+using TestingSystem.Constants;
 using TestingSystem.WEB.Models.Tests;
 
 namespace TestingSystem.WEB.Controllers
@@ -28,20 +29,21 @@ namespace TestingSystem.WEB.Controllers
         }
 
         // GET: Test
+        [Authorize]
         public async Task<ActionResult> Index()
         {
-            var tests = await TestService.GetAllAsync();
-            var testsView = tests.Select(test => new TestViewModel
-            {
-                Id = test.Id,
-                Name = test.Name,
-                TestDescription = test.TestDescription,
-            }).ToList();
+            return View(await GetAllTests());
+        }
 
-            return View(testsView);
+        // GET: Test/IndexForAdmin
+        [Authorize(Roles = RoleName.Admin)]
+        public async Task<ActionResult> IndexForAdmin()
+        {
+            return View(await GetAllTests());
         }
 
         // GET: Test/CreateTest
+        [Authorize(Roles = RoleName.Admin)]
         public ActionResult CreateTest()
         {
             return View();
@@ -60,7 +62,7 @@ namespace TestingSystem.WEB.Controllers
                     TestDescription = testViewModel.TestDescription,
                 };
                 await TestService.CreateAsync(testDto);
-                return RedirectToAction("Index");
+                return RedirectToAction("IndexForAdmin");
             }
 
             return View(testViewModel);
@@ -68,12 +70,12 @@ namespace TestingSystem.WEB.Controllers
 
 
         // GET: Test/Edit/5
+        [Authorize(Roles = RoleName.Admin)]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             var testDto = await TestService.GetByIdAsync(id);
             if (testDto == null)
                 return HttpNotFound();
@@ -108,6 +110,7 @@ namespace TestingSystem.WEB.Controllers
         }
 
         // GET: Test/Details/5
+        [Authorize(Roles = RoleName.Admin)]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -160,6 +163,8 @@ namespace TestingSystem.WEB.Controllers
             return RedirectToAction("Index");
         }
 
+
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RunTest(int? id)
@@ -207,7 +212,7 @@ namespace TestingSystem.WEB.Controllers
             return View("ShowQuestion", questionView);
         }
 
-
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> GoNextQuestion([Bind(Exclude = "Answers")] QuestionViewModel model, string testName, int[] answersId)
@@ -253,6 +258,7 @@ namespace TestingSystem.WEB.Controllers
             return View("ShowQuestion", model);
         }
 
+        [Authorize]
         public async Task<ActionResult> GetResult(int testId)
         {
             if (User.Identity.IsAuthenticated)
@@ -277,6 +283,20 @@ namespace TestingSystem.WEB.Controllers
             }
             return View("Error");
         }
+
+        private async Task<List<TestViewModel>> GetAllTests()
+        {
+            var tests = await TestService.GetAllAsync();
+            var testsViews = tests.Select(test => new TestViewModel
+            {
+                Id = test.Id,
+                Name = test.Name,
+                TestDescription = test.TestDescription,
+            }).ToList();
+
+            return testsViews;
+        }
+
 
         protected override void Dispose(bool disposing)
         {
