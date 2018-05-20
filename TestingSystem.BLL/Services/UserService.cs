@@ -72,7 +72,8 @@ namespace TestingSystem.BLL.Services
 
         public async Task<ClaimsIdentity> CreateIdentityAsync(UserDto user, string authenticationType)
         {
-            var appUser = await Database.UserRepository.FindByIdAsync(user.Id);
+            var appUser = await Database.UserRepository.FindByNameAsync(user.UserName);
+            if (appUser == null) return null;
             return await Database.UserRepository.CreateIdentityAsync(appUser, authenticationType);
         }
 
@@ -106,7 +107,7 @@ namespace TestingSystem.BLL.Services
 
             appUser.Email = user.Email;
 
-            return await Database.UserRepository.UpdateAsync(appUser); 
+            return await Database.UserRepository.UpdateAsync(appUser);
         }
 
         public async Task<IdentityResult> DeleteAsync(string userId)
