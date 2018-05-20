@@ -12,7 +12,7 @@
 <body>
     <div class="container">
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            
+
             <!-- Brand/logo -->
             <a class="navbar-brand" href="#">
                 <img src="~/Content/Images/knowledge.png" alt="logo" style="width:40px;">
@@ -46,6 +46,27 @@
                         </li>
                     }
                 </ul>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <nav class="navbar navbar-light bg-dark">
+                        <div class="form-inline ">
+
+                            @using (Ajax.BeginForm("TestSearch", "Test", new AjaxOptions
+                            {
+                                InsertionMode = InsertionMode.Replace,
+                                UpdateTargetId = "results",
+                                LoadingElementId = "loading",
+                                //LoadingElementDuration = 10000
+                            }))
+                            {
+                                <input class="form-control mr-sm-2 " type="text" placeholder="Search" name="name" aria-label="Search">
+                                <button class="btn btn-outline-success " type="submit">Search </button>
+                            }
+                        </div>
+                    </nav>
+                }
+
             </div>
 
             @Html.Partial("_LoginPartial")
@@ -55,6 +76,8 @@
     <div class="container body-content">
         <br />
         @RenderBody()
+
+        @Html.Partial("_SearchPartial")
 
         <footer class=" text-center p-2">
             <hr />

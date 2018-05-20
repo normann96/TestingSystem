@@ -1,0 +1,53 @@
+﻿@model IEnumerable<TestingSystem.WEB.Models.Tests.TestViewModel>
+
+@{
+    int count = 0;
+}
+
+<br />
+@if (Model?.Count() > 0)
+{
+    <div class="card-body">
+        <table class="table table-striped table-condensed table-bordered">
+
+            <tr>
+                <th class="text-center">ID</th>
+                <th class="text-center">Название</th>
+                <th class="text-center" colspan="2">Описание</th>
+                <th class="text-center">Действия</th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td class="text-center">@count</td>
+                    <td class="text-center">@Html.DisplayFor(modelItem => item.Name)</td>
+
+                    <td colspan="2">@Html.DisplayFor(modelItem => item.TestDescription)</td>
+
+                    <td class="text-center">
+                        @using (Html.BeginForm("RunTest", "Test", null, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input data-val="true" name="Id" type="hidden" value="@item.Id">
+                            <button type="submit" value="Run" class="btn btn-sm btn-success">Run</button>
+                        }
+                    </td>
+
+                </tr>
+            }
+
+        </table>
+    </div>
+}
+else
+{
+    <div>
+        <h4>Test not found</h4>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+}
