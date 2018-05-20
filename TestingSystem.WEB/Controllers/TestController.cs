@@ -284,6 +284,27 @@ namespace TestingSystem.WEB.Controllers
             return View("Error");
         }
 
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult> TestSearch(string name)
+        {
+            var allTestDto = await TestService.GetAllAsync();
+
+            var allTest = allTestDto.Where(t => t.Name.Contains(name)).ToList();
+            var allTestViewModel = new List<TestViewModel>();
+            foreach (var testDto in allTest)
+            {
+                allTestViewModel.Add(new TestViewModel
+                {
+                    Id = testDto.Id,
+                    Name = testDto.Name,
+                    TestDescription = testDto.TestDescription
+                });
+            }
+
+            return PartialView("_TestSearch", allTestViewModel);
+        }
+
         private async Task<List<TestViewModel>> GetAllTests()
         {
             var tests = await TestService.GetAllAsync();
