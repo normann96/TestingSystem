@@ -99,7 +99,7 @@ namespace TestingSystem.BLL.Services
                 Database.AnswerRepository.Update(newAnswer);
             }
 
-            Database.QuestionRepository.Update(question);
+            Database.QuestionRepository.Update(newQuestion);
             await Database.SaveAsync();
         }
 
