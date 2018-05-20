@@ -319,6 +319,7 @@
     <Content Include="Views\Question\DeleteAnswer.cshtml" />
     <Content Include="Views\Test\ShowQuestion.cshtml" />
     <Content Include="Views\Test\GetResult.cshtml" />
+    <Content Include="Views\Test\IndexForAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
