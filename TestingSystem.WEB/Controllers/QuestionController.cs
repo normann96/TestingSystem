@@ -8,10 +8,12 @@ using System.Web;
 using System.Web.Mvc;
 using TestingSystem.BLL.EntitiesDto;
 using TestingSystem.BLL.Interfaces;
+using TestingSystem.Constants;
 using TestingSystem.WEB.Models.Tests;
 
 namespace TestingSystem.WEB.Controllers
 {
+    [Authorize(Roles = RoleName.Admin)]
     public class QuestionController : Controller
     {
         private IQuestionService QuestionService { get; }
@@ -41,6 +43,7 @@ namespace TestingSystem.WEB.Controllers
             }
             return PartialView("_AddQuestion", new QuestionViewModel { QuestionContent = name, TestId = id, Point = point });
         }
+
 
 
         // GET: Question/Edit/5
