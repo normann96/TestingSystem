@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TestingSystem.BLL.EntitiesDto;
+using TestingSystem.BLL.Exceptions;
 using TestingSystem.BLL.Interfaces;
 using TestingSystem.DAL.Entities;
 using TestingSystem.DAL.Interfaces;
@@ -44,12 +46,14 @@ namespace TestingSystem.BLL.Services
                         QuestionId = answer.QuestionId
                     });
             }
-
             return questionDto;
         }
 
         public async Task CreateAsync(QuestionDto questionDto)
         {
+            if (questionDto == null)
+                throw new ArgumentNullException(nameof(questionDto));
+
             var question = new Question
             {
                 Id = questionDto.Id,
@@ -68,14 +72,26 @@ namespace TestingSystem.BLL.Services
                     QuestionId = answer.QuestionId,
                 });
             }
-            var questResult = Database.QuestionRepository.Create(question);
-            await Database.SaveAsync();
+
+            try
+            {
+                var questResult = Database.QuestionRepository.Create(question);
+                await Database.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                throw new TestException("Question not created. " + e.Message, e.InnerException);
+            }
         }
 
         public async Task UpdateAsync(QuestionDto questionDto)
         {
+            if (questionDto == null)
+                throw new ArgumentNullException(nameof(questionDto));
+
             var question = await Database.QuestionRepository.GetByIdAsync(questionDto.Id);
-            if (question == null) return;
+            if (question == null)
+                return;
 
             var newQuestion = new Question
             {
@@ -85,29 +101,47 @@ namespace TestingSystem.BLL.Services
                 QuestionContent = questionDto.QuestionContent,
                 Answers = new List<Answer>()
             };
-            foreach (var answer in questionDto.Answers)
-            {
-                var newAnswer = new Answer
-                {
-                    Id = answer.Id,
-                    AnswerContent = answer.AnswerContent,
-                    IsTrue = answer.IsTrue,
-                    QuestionId = answer.QuestionId,
-                    Question = question
-                };
-                newQuestion.Answers.Add(newAnswer);
-                Database.AnswerRepository.Update(newAnswer);
-            }
 
-            Database.QuestionRepository.Update(newQuestion);
-            await Database.SaveAsync();
+            try
+            {
+                foreach (var answer in questionDto.Answers)
+                {
+                    var newAnswer = new Answer
+                    {
+                        Id = answer.Id,
+                        AnswerContent = answer.AnswerContent,
+                        IsTrue = answer.IsTrue,
+                        QuestionId = answer.QuestionId,
+                        Question = question
+                    };
+                    newQuestion.Answers.Add(newAnswer);
+                    Database.AnswerRepository.Update(newAnswer);
+                }
+
+                Database.QuestionRepository.Update(newQuestion);
+                await Database.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                throw new TestException("Question not updated. " + e.Message, e.InnerException);
+            }
         }
 
         public async Task DeleteAsync(int questionId)
         {
             var question = await Database.QuestionRepository.GetByIdAsync(questionId);
-            var questionResult = Database.QuestionRepository.Delete(question);
-            await Database.SaveAsync();
+            if(question == null)
+                throw new TestException("Question not found");
+
+            try
+            {
+                var questionResult = Database.QuestionRepository.Delete(question);
+                await Database.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                throw new TestException("Question not deleted. " + e.Message, e.InnerException);
+            }
         }
 
         public async Task<AnswerDto> GetAnswerByIdAsync(int answerId)
@@ -129,6 +163,9 @@ namespace TestingSystem.BLL.Services
         public async Task DeleteAnswerAsync(int answerId)
         {
             var answer = await Database.AnswerRepository.GetByIdAsync(answerId);
+            if(answer == null)
+                throw new TestException("Answer not found");
+
             var answerResult = Database.AnswerRepository.Delete(answer);
             await Database.SaveAsync();
         }
@@ -163,6 +200,9 @@ namespace TestingSystem.BLL.Services
         public async Task<QuestionDto> GetNextQuestion(int testId, int questionId)
         {
             var allQuestions = await Database.QuestionRepository.GetAllAsync(x => x.TestId == testId);
+            if(allQuestions == null)
+                throw new TestException("Questions not found");
+
             var questions = allQuestions.OrderBy(x => x.Id);
             var allQuestionsDto = new List<QuestionDto>();
             foreach (var question in questions)
@@ -184,7 +224,7 @@ namespace TestingSystem.BLL.Services
                         AnswerContent = answer.AnswerContent,
                         IsTrue = answer.IsTrue,
                     };
-                    (questionDto.Answers as List<AnswerDto>)?.Add(answerDto);
+                    questionDto.Answers.Add(answerDto);
                 }
                 allQuestionsDto.Add(questionDto);
             }
@@ -204,7 +244,6 @@ namespace TestingSystem.BLL.Services
                     currQuest = null;
                     break;
                 }
-
             }
 
             if (queue.Count > 0)

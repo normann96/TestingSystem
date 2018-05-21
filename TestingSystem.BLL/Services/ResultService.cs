@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TestingSystem.BLL.EntitiesDto;
+using TestingSystem.BLL.Exceptions;
 using TestingSystem.BLL.Interfaces;
 using TestingSystem.Constants;
 using TestingSystem.DAL.Entities;
@@ -33,8 +35,16 @@ namespace TestingSystem.BLL.Services
                 UserId = userId,
                 SummaryResult = 0
             };
-            Database.TestResultRepository.Create(testResult);
-            await Database.SaveAsync();
+
+            try
+            {
+                Database.TestResultRepository.Create(testResult);
+                await Database.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                throw new TestException("Result not created. " + e.Message, e.InnerException);
+            }
         }
 
         public async Task SaveQuestionResult(string userId, int testId, int questionId, int[] answersId)
@@ -64,9 +74,16 @@ namespace TestingSystem.BLL.Services
             testResult.QuestionResults.Add(questionResult);
 
 
-            Database.QuestionResultRepository.Create(questionResult);
-            Database.TestResultRepository.Update(testResult);
-            await Database.SaveAsync();
+            try
+            {
+                Database.QuestionResultRepository.Create(questionResult);
+                Database.TestResultRepository.Update(testResult);
+                await Database.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                throw new TestException("Result not updated. " + e.Message, e.InnerException);
+            }
         }
 
         public async Task<TestResultDto> GetTestResultAsync(string userId, int testId)
@@ -87,6 +104,8 @@ namespace TestingSystem.BLL.Services
         private async Task<float> CalculateResult(int testId)
         {
             var questions = await Database.QuestionRepository.GetAllAsync(x => x.TestId == testId);
+            if(questions == null)
+                throw new TestException("Questions not found");
             return questions.Sum(x => x.Point) * TestPast.PastPercentage;
         }
 

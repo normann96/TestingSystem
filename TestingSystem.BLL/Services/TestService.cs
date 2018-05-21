@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Threading.Tasks;
 using TestingSystem.BLL.EntitiesDto;
+using TestingSystem.BLL.Exceptions;
 using TestingSystem.BLL.Interfaces;
 using TestingSystem.DAL.Entities;
 using TestingSystem.DAL.Interfaces;
@@ -71,8 +73,16 @@ namespace TestingSystem.BLL.Services
                 Name = testDto.Name,
                 TestDescription = testDto.TestDescription,
             };
-            var testResult = Database.TestRepository.Create(test);
-            await Database.SaveAsync();
+
+            try
+            {
+                var testResult = Database.TestRepository.Create(test);
+                await Database.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                throw new TestException("Test not created. " + e.Message, e.InnerException);
+            }
         }
 
         public async Task UpdateAsync(TestDto testDto)
@@ -83,8 +93,16 @@ namespace TestingSystem.BLL.Services
             test.Name = testDto.Name;
             test.TestDescription = testDto.TestDescription;
 
-            Database.TestRepository.Update(test);
-            await Database.SaveAsync();
+
+            try
+            {
+                Database.TestRepository.Update(test);
+                await Database.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                throw new TestException("Test not updated. " + e.Message, e.InnerException);
+            }
         }
 
         public async Task DeleteAsync(int testId)
@@ -93,8 +111,16 @@ namespace TestingSystem.BLL.Services
             if (test == null)
                 return;
 
-            var testResult = Database.TestRepository.Delete(test);
-            await Database.SaveAsync();
+            try
+            {
+                var testResult = Database.TestRepository.Delete(test);
+                await Database.SaveAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                throw new TestException("Test not deleted. " + e.Message, e.InnerException);
+            }
+
         }
         #endregion
 
