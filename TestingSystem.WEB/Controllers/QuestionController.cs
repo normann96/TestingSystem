@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using TestingSystem.BLL.EntitiesDto;
+using TestingSystem.BLL.Exceptions;
 using TestingSystem.BLL.Interfaces;
 using TestingSystem.Constants;
 using TestingSystem.WEB.Models.Tests;
@@ -37,8 +38,17 @@ namespace TestingSystem.WEB.Controllers
                     Point = viewModel.Point,
                     Answers = new List<AnswerDto>()
                 };
-                await QuestionService.CreateAsync(questionDto);
-                return RedirectToAction("Details", "Test", new { id = questionDto.TestId });
+
+                try
+                {
+                    await QuestionService.CreateAsync(questionDto);
+                    return RedirectToAction("Details", "Test", new { id = questionDto.TestId });
+                }
+                catch (TestException e)
+                {
+                    ViewBag.Error = e.Message;
+                    return View("Error");
+                }
             }
             return PartialView("_AddQuestion", viewModel);
         }
@@ -48,14 +58,12 @@ namespace TestingSystem.WEB.Controllers
         public async Task<ActionResult> Edit(int? questionId)
         {
             if (questionId == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            
             var questionDto = await QuestionService.GetByIdAsync(questionId.Value);
             if (questionDto == null)
-            {
                 return HttpNotFound();
-            }
+            
             QuestionViewModel questionViewModel = new QuestionViewModel
             {
                 Id = questionDto.Id,
@@ -73,7 +81,7 @@ namespace TestingSystem.WEB.Controllers
                     IsTrue = answer.IsTrue,
                     QuestionId = answer.QuestionId
                 };
-                (questionViewModel.Answers as List<AnswerViewModel>)?.Add(newAnswer);
+                questionViewModel.Answers.Add(newAnswer);
             }
 
             return View(questionViewModel);
@@ -108,9 +116,16 @@ namespace TestingSystem.WEB.Controllers
                         });
                     }
                 }
-                questionViewModel.Answers = new List<AnswerViewModel>();
-                await QuestionService.UpdateAsync(questDto);
-                return RedirectToAction("Edit", "Question", new { questionId = questDto.Id });
+                try
+                {
+                    await QuestionService.UpdateAsync(questDto);
+                    return RedirectToAction("Edit", "Question", new { questionId = questDto.Id });
+                }
+                catch (TestException e)
+                {
+                    ViewBag.Error = e.Message;
+                    return View("Error");
+                }
             }
             return View(questionViewModel);
         }
@@ -140,8 +155,16 @@ namespace TestingSystem.WEB.Controllers
             if (testId == null || questionId == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            await QuestionService.DeleteAsync(questionId.Value);
-            return RedirectToAction("Details", "Test", new { id = testId.Value });
+            try
+            {
+                await QuestionService.DeleteAsync(questionId.Value);
+                return RedirectToAction("Details", "Test", new { id = testId.Value });
+            }
+            catch (TestException e)
+            {
+                ViewBag.Error = e.Message;
+                return View("Error");
+            }
         }
 
 
@@ -166,13 +189,21 @@ namespace TestingSystem.WEB.Controllers
         }
 
 
-        // POST: Question/Delete/5
+        // POST: Question/DeleteAnswer/5
         [HttpPost, ActionName("DeleteAnswer")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int answerId, int questionId)
         {
-            await QuestionService.DeleteAnswerAsync(answerId);
-            return RedirectToAction("Edit", "Question", new { questionId });
+            try
+            {
+                await QuestionService.DeleteAnswerAsync(answerId);
+                return RedirectToAction("Edit", "Question", new { questionId });
+            }
+            catch (TestException e)
+            {
+                ViewBag.Error = e.Message;
+                return View("Error");
+            }
         }
 
 

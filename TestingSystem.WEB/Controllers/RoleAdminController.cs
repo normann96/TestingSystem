@@ -81,6 +81,7 @@ namespace TestingSystem.WEB.Controllers
                     result = await UserService.AddToRoleAsync(userId, model.RoleName);
                     if (!result.Succeeded)
                     {
+                        ViewBag.Error = "The user was not added to the role";
                         return View("Error");
                     }
                 }
@@ -90,6 +91,7 @@ namespace TestingSystem.WEB.Controllers
                     result = await UserService.RemoveFromRoleAsync(userId, model.RoleName);
                     if (!result.Succeeded)
                     {
+                        ViewBag.Error = "The user was not deleted from the role";
                         return View("Error");
                     }
                 }

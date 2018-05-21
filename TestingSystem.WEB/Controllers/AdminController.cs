@@ -69,7 +69,11 @@ namespace TestingSystem.WEB.Controllers
         public async Task<ActionResult> DeleteUser(string id)
         {
             if (User.Identity.GetUserId() == id)
+            {
+                ViewBag.Error = "You can't delete yourself!";
                 return View("Error");
+            }
+
             IdentityResult result = await UserService.DeleteAsync(id);
             if (result.Succeeded)
             {

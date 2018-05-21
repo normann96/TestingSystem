@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using TestingSystem.BLL.EntitiesDto;
+using TestingSystem.BLL.Exceptions;
 using TestingSystem.BLL.Interfaces;
 using TestingSystem.BLL.Services;
 using TestingSystem.Constants;
@@ -61,8 +62,17 @@ namespace TestingSystem.WEB.Controllers
                     Name = testViewModel.Name,
                     TestDescription = testViewModel.TestDescription,
                 };
-                await TestService.CreateAsync(testDto);
-                return RedirectToAction("IndexForAdmin");
+
+                try
+                {
+                    await TestService.CreateAsync(testDto);
+                    return RedirectToAction("IndexForAdmin");
+                }
+                catch (TestException e)
+                {
+                    ViewBag.Error = e.Message;
+                    return View("Error");
+                }
             }
 
             return View(testViewModel);
@@ -91,6 +101,7 @@ namespace TestingSystem.WEB.Controllers
         }
 
         // POST: Test/Edit/5
+        [Authorize(Roles = RoleName.Admin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "Id,Name,TestDescription")] TestViewModel testViewModel)
@@ -103,8 +114,17 @@ namespace TestingSystem.WEB.Controllers
                     Name = testViewModel.Name,
                     TestDescription = testViewModel.TestDescription,
                 };
-                await TestService.UpdateAsync(testDto);
-                return RedirectToAction("Details", "Test", new { id = testViewModel.Id });
+
+                try
+                {
+                    await TestService.UpdateAsync(testDto);
+                    return RedirectToAction("Details", "Test", new { id = testViewModel.Id });
+                }
+                catch (TestException e)
+                {
+                    ViewBag.Error = e.Message;
+                    return View("Error");
+                }
             }
             return View(testViewModel);
         }
@@ -155,12 +175,22 @@ namespace TestingSystem.WEB.Controllers
             return View(testViewModel);
         }
 
+        [Authorize(Roles = RoleName.Admin)]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            await TestService.DeleteAsync(id);
-            return RedirectToAction("Index");
+
+            try
+            {
+                await TestService.DeleteAsync(id);
+                return RedirectToAction("IndexForAdmin");
+            }
+            catch (TestException e)
+            {
+                ViewBag.Error = e.Message;
+                return View("Error");
+            }
         }
 
 
@@ -174,10 +204,9 @@ namespace TestingSystem.WEB.Controllers
 
             var testDto = await TestService.GetByIdAsync(id.Value);
             if (testDto == null)
-                return HttpNotFound();
+                return HttpNotFound("Test not found");
 
             var questionDto = await QuestionService.GetFirstByTestIdAsync(id.Value);
-
             if (questionDto == null)
                 return HttpNotFound("There are no questions in the test.");
 
@@ -201,11 +230,15 @@ namespace TestingSystem.WEB.Controllers
                 questionView.Answers.Add(answerView);
             }
 
-
-            if (User.Identity.IsAuthenticated)
+            try
             {
                 string userId = User.Identity.GetUserId();
                 await ResultService.CreateTestResult(userId, testDto.Id);
+            }
+            catch (TestException e)
+            {
+                ViewBag.Error = e.Message;
+                return View("Error");
             }
 
             ViewBag.TestName = testDto.Name;
@@ -217,12 +250,19 @@ namespace TestingSystem.WEB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> GoNextQuestion([Bind(Exclude = "Answers")] QuestionViewModel model, string testName, int[] answersId)
         {
+            ViewBag.TestName = testName;
             if (ModelState.IsValid)
             {
-                if (User.Identity.IsAuthenticated)
+
+                try
                 {
                     string userId = User.Identity.GetUserId();
                     await ResultService.SaveQuestionResult(userId, model.TestId, model.Id, answersId);
+                }
+                catch (TestException e)
+                {
+                    ViewBag.Error = e.Message;
+                    return View("Error");
                 }
 
                 var questionDto = await QuestionService.GetNextQuestion(model.TestId, model.Id);
@@ -246,42 +286,40 @@ namespace TestingSystem.WEB.Controllers
                         AnswerContent = answerDto.AnswerContent,
                         IsTrue = answerDto.IsTrue
                     };
-                    (questionView.Answers as List<AnswerViewModel>)?.Add(answerView);
+                    questionView.Answers.Add(answerView);
                 }
 
-                var testDto = await TestService.GetByIdAsync(model.TestId);
-
-                ViewBag.TestName = testDto.Name;
                 return View("ShowQuestion", questionView);
             }
-            ViewBag.TestName = testName;
-            return View("ShowQuestion", model);
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //return View("ShowQuestion", model);
         }
 
         [Authorize]
         public async Task<ActionResult> GetResult(int testId)
         {
-            if (User.Identity.IsAuthenticated)
+            try
             {
                 string userName = User.Identity.GetUserName();
                 var test = await TestService.GetByIdAsync(testId);
 
-                if (User.Identity.IsAuthenticated)
-                {
-                    string userId = User.Identity.GetUserId();
-                    var resultDto = await ResultService.GetTestResultAsync(userId, testId);
-                    var resultTest = new ResultViewModel
-                    {
-                        TestName = test.Name,
-                        Score = resultDto.SummaryResult,
-                        UserName = userName,
-                        IsPassed = resultDto.IsPassed
-                    };
-                    return View(resultTest);
-                }
 
+                string userId = User.Identity.GetUserId();
+                var resultDto = await ResultService.GetTestResultAsync(userId, testId);
+                var resultTest = new ResultViewModel
+                {
+                    TestName = test.Name,
+                    Score = resultDto.SummaryResult,
+                    UserName = userName,
+                    IsPassed = resultDto.IsPassed
+                };
+                return View(resultTest);
             }
-            return View("Error");
+            catch (TestException e)
+            {
+                ViewBag.Error = e.Message;
+                return View("Error");
+            }
         }
 
         [Authorize]
