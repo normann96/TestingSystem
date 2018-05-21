@@ -65,6 +65,7 @@
     <Compile Include="EntitiesDto\TestDto.cs" />
     <Compile Include="EntitiesDto\TestResultDto.cs" />
     <Compile Include="EntitiesDto\UserDto.cs" />
+    <Compile Include="Exceptions\TestException.cs" />
     <Compile Include="Infrastructure\IdentityNinjectModule.cs" />
     <Compile Include="Interfaces\IQuestionService.cs" />
     <Compile Include="Interfaces\IResultService.cs" />
