@@ -18,7 +18,7 @@ namespace TestingSystem.DAL.Repositories.Base
 
         protected BaseRepository(AppIdentityDbContext context)
         {
-            Db = context ?? throw new ArgumentNullException(nameof(context));
+            Db = context ?? throw new ArgumentNullException("An instance of DbContext is required to use this repository.", nameof(context));
         }
 
         #region IRepository Members
