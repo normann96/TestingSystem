@@ -227,6 +227,7 @@
     <Content Include="Content\Images\404.png" />
     <Content Include="Content\Images\knowledge.png" />
     <Content Include="Content\Images\load.gif" />
+    <Content Include="Content\Images\quiz.png" />
     <Content Include="Content\signin.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
